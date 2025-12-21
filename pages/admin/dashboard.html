@@ -1,0 +1,187 @@
+<!-- frontend/pages/admin/dashboard.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Distributed Blood Management System</title>
+    <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <a href="dashboard.html" class="navbar-brand">
+            <div class="navbar-logo">🩸</div>
+            <span>Distributed Blood Management</span>
+        </a>
+        
+        <div class="navbar-right">
+            <div class="notification-icon" id="notificationIcon">
+                <span>🔔</span>
+                <span class="notification-badge" id="notificationBadge">12</span>
+            </div>
+            
+            <div class="user-profile" id="userProfile">
+                <div class="user-avatar" id="userAvatar">AD</div>
+                <span id="userName">System Admin</span>
+            </div>
+            
+            <div class="dropdown-menu" id="dropdownMenu">
+                <a href="users.html" class="dropdown-item">Manage Users</a>
+                <a href="blood-banks.html" class="dropdown-item">Blood Banks</a>
+                <a href="audit-logs.html" class="dropdown-item">Audit Logs</a>
+                <a href="../notifications.html" class="dropdown-item">Notifications</a>
+                <div class="dropdown-divider"></div>
+                <a href="#" class="dropdown-item" id="logoutBtn">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <ul class="sidebar-menu">
+            <li class="sidebar-item">
+                <a href="dashboard.html" class="sidebar-link active">
+                    <span class="sidebar-icon">📊</span>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="users.html" class="sidebar-link">
+                    <span class="sidebar-icon">👥</span>
+                    <span>Users</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="blood-banks.html" class="sidebar-link">
+                    <span class="sidebar-icon">🏥</span>
+                    <span>Blood Banks</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="audit-logs.html" class="sidebar-link">
+                    <span class="sidebar-icon">📜</span>
+                    <span>Audit Logs</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="../notifications.html" class="sidebar-link">
+                    <span class="sidebar-icon">🔔</span>
+                    <span>Notifications</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container">
+            <h1>System Administration Overview</h1>
+            
+            <!-- Summary Cards -->
+            <div class="summary-grid">
+                <div class="summary-card">
+                    <div class="summary-card-title">Total Blood Banks</div>
+                    <div class="summary-card-value" id="totalBloodBanks">24</div>
+                    <div class="summary-card-subtext">Registered blood banks</div>
+                </div>
+                
+                <div class="summary-card">
+                    <div class="summary-card-title">Total Donors</div>
+                    <div class="summary-card-value" id="totalDonors">1,847</div>
+                    <div class="summary-card-subtext">Active blood donors</div>
+                </div>
+                
+                <div class="summary-card">
+                    <div class="summary-card-title">Active Requests</div>
+                    <div class="summary-card-value" id="activeRequests">42</div>
+                    <div class="summary-card-subtext">Pending blood requests</div>
+                </div>
+                
+                <div class="summary-card">
+                    <div class="summary-card-title">System Health</div>
+                    <div class="summary-card-value" id="systemHealth">98%</div>
+                    <div class="summary-card-subtext">Uptime & performance</div>
+                </div>
+            </div>
+
+            <!-- System Metrics -->
+            <div class="card">
+                <div class="card-header">
+                    <h2>System Metrics</h2>
+                </div>
+                
+                <div class="d-flex gap-3" style="flex-wrap: wrap;">
+                    <div style="flex: 1; min-width: 300px;">
+                        <h3>Blood Distribution by Type</h3>
+                        <div id="bloodDistributionChart" style="height: 250px; background: var(--off-white); border-radius: 0.5rem; display: flex; align-items: center; justify-content: center;">
+                            <div class="text-muted">Chart: Blood Group Distribution</div>
+                        </div>
+                    </div>
+                    
+                    <div style="flex: 1; min-width: 300px;">
+                        <h3>Monthly Requests Trend</h3>
+                        <div id="requestsTrendChart" style="height: 250px; background: var(--off-white); border-radius: 0.5rem; display: flex; align-items: center; justify-content: center;">
+                            <div class="text-muted">Chart: Monthly Request Trends</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="card">
+                <div class="card-header">
+                    <h2>Recent System Activity</h2>
+                    <button class="btn btn-primary" onclick="window.location.href='audit-logs.html'">
+                        View All Logs
+                    </button>
+                </div>
+                
+                <div class="table-container">
+                    <table class="table" id="activityTable">
+                        <thead>
+                            <tr>
+                                <th>Timestamp</th>
+                                <th>User</th>
+                                <th>Action</th>
+                                <th>Entity</th>
+                                <th>Details</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Activity logs will be loaded here by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- System Alerts -->
+            <div class="card">
+                <div class="card-header">
+                    <h2>System Alerts</h2>
+                </div>
+                
+                <div class="table-container">
+                    <table class="table" id="alertsTable">
+                        <thead>
+                            <tr>
+                                <th>Alert Type</th>
+                                <th>Severity</th>
+                                <th>Blood Bank</th>
+                                <th>Blood Group</th>
+                                <th>Description</th>
+                                <th>Timestamp</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Alerts will be loaded here by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../js/admin/dashboard.js"></script>
+</body>
+</html>
