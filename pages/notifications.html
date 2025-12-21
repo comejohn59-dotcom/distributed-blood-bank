@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications - Distributed Blood Management System</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Top Navbar -->
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <div class="navbar-logo">
+                <i class="fas fa-tint"></i>
+            </div>
+            <div class="navbar-title">Distributed Blood Management System</div>
+        </div>
+        
+        <div class="navbar-spacer"></div>
+        
+        <div class="navbar-actions">
+            <div class="user-dropdown" id="userDropdown">
+                <div class="user-profile">
+                    <div class="user-avatar" id="userAvatar">U</div>
+                    <div class="user-info">
+                        <div class="user-name" id="userName">User</div>
+                        <div class="user-role" id="userRole">Role</div>
+                    </div>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="dropdown-menu" id="dropdownMenu">
+                    <a href="#" class="dropdown-item" onclick="goToDashboard()">
+                        <i class="fas fa-tachometer-alt"></i> Dashboard
+                    </a>
+                    <a href="#" class="dropdown-item">
+                        <i class="fas fa-cog"></i> Settings
+                    </a>
+                    <a href="#" class="dropdown-item" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content" style="margin-left: 0;">
+        <div class="content-header">
+            <div class="page-title">
+                <i class="fas fa-bell page-title-icon"></i>
+                <h1>Notifications</h1>
+            </div>
+            <div class="page-actions">
+                <button class="btn btn-outline" id="markAllReadBtn">
+                    <i class="fas fa-check-double"></i> Mark All Read
+                </button>
+                <button class="btn btn-outline" id="deleteAllBtn">
+                    <i class="fas fa-trash"></i> Delete All
+                </button>
+            </div>
+        </div>
+
+        <!-- Notifications Tabs -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="tabs">
+                    <button class="tab-btn active" data-filter="all">All Notifications</button>
+                    <button class="tab-btn" data-filter="unread">Unread</button>
+                    <button class="tab-btn" data-filter="emergency">Emergency</button>
+                    <button class="tab-btn" data-filter="system">System</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notifications List -->
+        <div class="card">
+            <div class="card-body">
+                <div class="notifications-container" id="notificationsContainer">
+                    <!-- Notifications will be loaded here -->
+                    <div class="loading-placeholder">
+                        <i class="fas fa-spinner fa-spin"></i> Loading notifications...
+                    </div>
+                </div>
+                
+                <!-- Pagination -->
+                <div class="pagination mt-4" id="pagination">
+                    <!-- Pagination will be loaded here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Empty State -->
+        <div class="empty-state" id="emptyState" style="display: none;">
+            <div class="empty-icon">
+                <i class="fas fa-bell-slash"></i>
+            </div>
+            <h3>No Notifications</h3>
+            <p>You're all caught up! There are no notifications to display.</p>
+            <button class="btn btn-primary" id="refreshNotificationsBtn">
+                <i class="fas fa-sync-alt"></i> Refresh
+            </button>
+        </div>
+    </main>
+
+    <style>
+        /* Notifications Page Specific Styles */
+        .tabs {
+            display: flex;
+            gap: 1px;
+            border-radius: 6px;
+            overflow: hidden;
+            border: 1px solid #E4E7EB;
+            background-color: #E4E7EB;
+        }
+        
+        .tab-btn {
+            flex: 1;
+            padding: 12px 16px;
+            background-color: #F8F9FA;
+            border: none;
+            font-weight: 500;
+            color: #6B7280;
+            cursor: pointer;
+            transition: all 150ms ease;
+        }
+        
+        .tab-btn:hover {
+            background-color: #E9ECEF;
+        }
+        
+        .tab-btn.active {
+            background-color: #8B1E1E;
+            color: white;
+        }
+        
+        .notifications-container {
+            min-height: 400px;
+        }
+        
+        .notification-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            padding: 20px;
+            border-bottom: 1px solid #E4E7EB;
+            transition: background-color 150ms ease;
+        }
+        
+        .notification-item:hover {
+            background-color: #F8F9FA;
+        }
+        
+        .notification-item:last-child {
+            border-bottom: none;
+        }
+        
+        .notification-item.unread {
+            background-color: rgba(139, 30, 30, 0.05);
+        }
+        
+        .notification-item.emergency {
+            border-left: 4px solid #C0392B;
+        }
+        
+        .notification-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+        
+        .notification-icon.info {
+            background-color: rgba(21, 101, 192, 0.1);
+            color: #1565C0;
+        }
+        
+        .notification-icon.emergency {
+            background-color: rgba(192, 57, 43, 0.1);
+            color: #C0392B;
+        }
+        
+        .notification-icon.warning {
+            background-color: rgba(245, 124, 0, 0.1);
+            color: #F57C00;
+        }
+        
+        .notification-icon.success {
+            background-color: rgba(46, 125, 50, 0.1);
+            color: #2E7D32;
+        }
+        
+        .notification-content {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .notification-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+        
+        .notification-title {
+            font-weight: 600;
+            color: #2E2E2E;
+            font-size: 16px;
+            margin: 0;
+        }
+        
+        .notification-time {
+            font-size: 14px;
+            color: #9AA5B1;
+            white-space: nowrap;
+        }
+        
+        .notification-text {
+            color: #6B7280;
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+        
+        .notification-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .notification-action-btn {
+            padding: 6px 12px;
+            font-size: 14px;
+        }
+        
+        .notification-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            background-color: #8B1E1E;
+            color: white;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+        }
+        
+        .empty-icon {
+            font-size: 64px;
+            color: #9AA5B1;
+            margin-bottom: 24px;
+        }
+        
+        .empty-state h3 {
+            font-size: 24px;
+            color: #2E2E2E;
+            margin-bottom: 12px;
+        }
+        
+        .empty-state p {
+            color: #6B7280;
+            margin-bottom: 24px;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .page-btn {
+            padding: 8px 12px;
+            border: 1px solid #E4E7EB;
+            background-color: white;
+            color: #2E2E2E;
+            cursor: pointer;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+        
+        .page-btn:hover {
+            background-color: #F8F9FA;
+        }
+        
+        .page-btn.active {
+            background-color: #8B1E1E;
+            color: white;
+            border-color: #8B1E1E;
+        }
+        
+        .page-btn.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+    </style>
+
+    <script src="../js/notifications.js"></script>
+    <script>
+        function goToDashboard() {
+            const role = localStorage.getItem('user_role');
+            const dashboards = {
+                'admin': '../admin/dashboard.html',
+                'blood_bank': '../blood-bank/dashboard.html',
+                'hospital': '../hospital/dashboard.html',
+                'donor': '../donor/dashboard.html'
+            };
+            
+            if (dashboards[role]) {
+                window.location.href = dashboards[role];
+            } else {
+                window.location.href = '../index.html';
+            }
+        }
+    </script>
+</body>
+</html>
