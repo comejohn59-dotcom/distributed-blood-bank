@@ -1,0 +1,3 @@
+register.php exception: Access to undeclared static property Database::$conn in C:\wamp64\www\mySystem\backend\config\db.php:16
+register.php exception: Access denied for user 'root'@'localhost' (using password: NO) in C:\wamp64\www\mySystem\backend\config\db.php:21
+register.php exception: Access denied for user 'root'@'localhost' (using password: NO) in C:\wamp64\www\mySystem\backend\config\db.php:21
